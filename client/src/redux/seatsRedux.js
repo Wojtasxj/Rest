@@ -4,10 +4,11 @@ import { API_URL } from '../config';
 /* SELECTORS */
 export const getSeats = ({ seats }) => seats.data;
 export const getRequests = ({ seats }) => seats.requests;
+export const getFreeSeats = ({ seats }) => seats.totalSeats - seats.data.length;
+export const getTotalSeats = ({ seats }) => seats.totalSeats;
 
 /* ACTIONS */
 
-// action name creator
 const reducerName = 'seats';
 const createActionName = name => `app/${reducerName}/${name}`;
 
@@ -66,6 +67,7 @@ export const addSeatRequest = (seat) => {
 const initialState = {
   data: [],
   requests: {},
+  totalSeats: 50,
 };
 
 /* REDUCER */
@@ -73,9 +75,17 @@ const initialState = {
 export default function reducer(statePart = initialState, action = {}) {
   switch (action.type) {
     case LOAD_SEATS: 
-      return { ...statePart, data: [...action.payload] };
+      return { 
+        ...statePart,
+        data: [...action.payload],
+        freeSeats: statePart.totalSeats - action.payload.length,
+       };
     case ADD_SEAT: 
-      return { ...statePart, data: [...statePart.data, action.payload] }
+      return { 
+        ...statePart,
+        data: [...statePart.data, action.payload],
+        freeSeats: statePart.freeSeats - 1,
+      };
     case START_REQUEST:
       return { ...statePart, requests: {...statePart.requests, [action.payload.name]: { pending: true, error: null, success: false }} };
     case END_REQUEST:
