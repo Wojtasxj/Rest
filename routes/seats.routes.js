@@ -8,7 +8,7 @@ router.get('/seats', (req, res) => {
 });
 
 router.get('/seats/:id', (req, res) => {
-  const id = parseInt(req.params.id);
+  const id = req.params.id;
   const seat = db.seats.find(s => s.id === id);
   if (seat) {
     res.json(seat);
@@ -34,11 +34,14 @@ router.post('/seats', (req, res) => {
     email
   };
   db.seats.push(newSeat);
+
+  req.io.emit('seatsUpdated', newSeat);
+
   res.json({ message: 'OK' });
 });
 
 router.put('/seats/:id', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const { day, seat, client, email } = req.body;
     const seatData = db.seats.find(s => s.id === id);
     if (seatData) {
@@ -53,7 +56,7 @@ router.put('/seats/:id', (req, res) => {
   });
   
   router.delete('/seats/:id', (req, res) => {
-    const id = parseInt(req.params.id);
+    const id = req.params.id;
     const index = db.seats.findIndex(s => s.id === id);
     if (index !== -1) {
       db.seats.splice(index, 1);
