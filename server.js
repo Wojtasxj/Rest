@@ -38,7 +38,7 @@ io.on('connection', (socket) => {
     console.log('New socket!');
 });
 
-mongoose.connect('mongodb://127.0.0.1:27017/NewWaveDB')
+mongoose.connect('mongodb+srv://wojtasxj:YEyZB9zYKmoId7PX@cluster0.kum70so.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0')
 .then(() => {
     console.log('Connected to the database');
 })
