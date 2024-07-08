@@ -6,6 +6,7 @@ const seatsRoutes = require('./routes/seats.routes.js');
 const path = require('path');
 
 const socketIO = require('socket.io');
+const mongoose = require('mongoose');
 
 const app = express();
 const server = require('http').createServer(app);
@@ -18,7 +19,7 @@ app.use(express.json());
 app.use((req, res, next) => {
     req.io = io;
     next();
-  });
+});
 
 app.use('/api', testimonialsRoutes);
 app.use('/api', concertRoutes);
@@ -35,6 +36,14 @@ app.use((req, res) => {
 
 io.on('connection', (socket) => {
     console.log('New socket!');
+});
+
+mongoose.connect('mongodb://127.0.0.1:27017/NewWaveDB')
+.then(() => {
+    console.log('Connected to the database');
+})
+.catch((err) => {
+    console.error('Error connecting to the database:', err.message);
 });
 
 server.listen(process.env.PORT || 8000, () => {
